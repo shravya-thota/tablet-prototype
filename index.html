@@ -1,5 +1,6 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
-<title>Swipeable Feed Prototype</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Swipeable Feed Prototype — Tablet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -804,6 +805,7 @@
     background: rgba(255,255,255,0.08);
     margin: 2px 16px;
   }
+  .top10-tile.lp-active .top10-thumb,
   .tile.lp-active .tile-thumb {
     transform: scale(1.05);
     transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
@@ -2683,9 +2685,298 @@
   }
   .wt-dot.wt-dot-done { background: var(--accent-teal); }
   .wt-dot.wt-dot-current { background: var(--accent-gold); }
+
+  /* ═══════════════════════════════════════════════
+     TABLET LAYOUT LAYER
+     Frame is sized by --fw/--fh (set per orientation) and scaled by
+     --scale (computed in JS) so it always fits beside the tour card.
+     ═══════════════════════════════════════════════ */
+  :root { --fw: 1180px; --fh: 820px; --scale: 1; }
+  body { padding-left: 0; }
+  body.tour-on { padding-left: 380px; }
+  @media (max-width: 900px) { body.tour-on { padding-left: 0; } }
+  .stage {
+    position: relative;
+    width: calc(var(--fw) * var(--scale));
+    height: calc(var(--fh) * var(--scale));
+    flex-shrink: 0;
+  }
+  .device-frame.tablet {
+    position: absolute; top: 0; left: 0;
+    width: var(--fw); height: var(--fh);
+    transform: scale(var(--scale));
+    transform-origin: top left;
+    border-radius: 36px;
+    display: flex; flex-direction: row;
+    box-shadow: 0 0 0 4px #2a2a2e, 0 0 0 8px #111, 0 30px 80px rgba(0,0,0,0.85);
+  }
+  @media (max-width: 430px) {
+    .device-frame.tablet { width: var(--fw); height: var(--fh); border-radius: 36px; box-shadow: 0 0 0 4px #2a2a2e, 0 0 0 8px #111; }
+  }
+
+  /* ── Sidebar nav ── */
+  .side-nav {
+    width: 96px; flex-shrink: 0; height: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 22px 0 22px; gap: 4px;
+    background: rgba(255,255,255,0.025);
+    border-right: 1px solid rgba(255,255,255,0.06);
+    position: relative; z-index: 32;
+  }
+  .side-brand {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-gold));
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 26px;
+    box-shadow: 0 4px 16px rgba(62,224,197,0.25);
+  }
+  .side-brand svg { width: 20px; height: 20px; fill: #0e0b1e; }
+  .side-nav .nav-row { display: contents; }
+  .side-nav .nav-item {
+    width: 72px; padding: 11px 0 9px; border-radius: 16px; gap: 6px;
+    opacity: 0.5; transition: opacity 0.2s, background 0.2s, transform 0.15s;
+  }
+  .side-nav .nav-item:hover { opacity: 0.85; background: rgba(255,255,255,0.05); }
+  .side-nav .nav-item.active { opacity: 1; background: rgba(62,224,197,0.12); }
+  .side-nav .nav-item.active svg { fill: var(--accent-teal); }
+  .side-nav .nav-item.active .nav-label { color: var(--accent-teal); }
+  .side-nav .nav-item svg { width: 24px; height: 24px; }
+  .side-nav .nav-label { font-size: 10px; letter-spacing: 0.01em; }
+  .side-nav-spacer { flex: 1; }
+  .side-nav .side-settings { opacity: 0.35; }
+
+  /* ── Main column ── */
+  .main-col {
+    flex: 1; min-width: 0; height: 100%;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .tablet .status-bar { padding: 12px 34px 0; }
+  .tablet .top-header { padding: 12px 28px 14px; }
+  .tablet .top-search-bar { max-width: none; padding: 9px 12px 9px 16px; }
+  .tablet .top-search-bar span { font-size: 14px !important; }
+  .tablet .tab-bar { padding: 0 28px 12px; gap: 8px; }
+  .tablet .feeds-viewport { flex: 1; min-height: 0; height: auto; }
+  .tablet .bottom-control {
+    background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none;
+    padding: 0 20px 14px; pointer-events: none;
+  }
+  .tablet .bottom-control > * { pointer-events: auto; }
+  .tablet .now-playing-mini { border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.55); }
+  .tablet .now-playing-expanded.np-open { max-height: 100%; border-radius: 24px 24px 0 0; }
+  .tablet .sticky-resume { bottom: 20px; left: 28px; right: 28px; }
+  .tablet .home-indicator { width: 160px; }
+
+  /* ── Content density for the wider canvas ── */
+  .tablet .tile-row { gap: 14px; padding: 0 28px 26px; }
+  .tablet .hero-wrap { width: calc(100% - 56px); margin-bottom: 18px; aspect-ratio: 21/9; max-height: 400px; }
+  .tablet .hero-content { padding: 28px 40px 32px; text-align: left; align-items: flex-start; max-width: 620px; }
+  .tablet .hero-meta { justify-content: flex-start; }
+  .tablet .hero-title { font-size: 38px; letter-spacing: -0.01em; }
+  .tablet .hero-gradient { background: linear-gradient(90deg, rgba(14,11,30,0.85) 0%, rgba(14,11,30,0.35) 45%, rgba(14,11,30,0) 70%), linear-gradient(180deg, rgba(14,11,30,0) 40%, rgba(14,11,30,0.9) 100%); }
+  .tablet .section-header, .tablet .section-title-row { padding-left: 28px; padding-right: 28px; }
+  .tablet .time-scale { margin: 14px 28px; }
+
+  /* Portrait tweaks */
+  .orient-portrait .side-nav { width: 88px; }
+  .orient-portrait .tablet .hero-wrap { aspect-ratio: 16/9; max-height: 440px; }
+
+  /* ═══════════════════════════════════════════════
+     TABLET GRID SYSTEM
+     Tile width is derived from a target VISIBLE COUNT per size class, not a
+     fixed pixel size. Counts are always N.5 so the last tile peeks and the row
+     reads as scrollable (NN/g "bleed the next item"). Derived from the tile-
+     sizing explorations: Large Poster Peek (≈3.5 posters on iPad, Netflix-
+     comparable), Wide 16:9 (≈3.4 stills), Compact (5+ small tiles).
+       t = (W − (N − 0.5)·gap) / N      where W = row content width
+     ═══════════════════════════════════════════════ */
+  .tablet {
+    --row-gap: 14px;
+    --n-poster: 3.5;    /* 2:3 posters   → ~282px wide in landscape */
+    --n-wide: 3.5;      /* 16:9 stills   → ~282×158 */
+    --n-compact: 4.5;   /* small 16:9    → ~216×122 */
+    --n-micro: 7.5;     /* 9:16 clips    → ~126×224 (Compact exploration scale) */
+    --n-qw: 5.5;        /* quick-watch   → ~175px  */
+  }
+  .orient-portrait .tablet {
+    --n-poster: 2.5;    /* ~259px with rail, ~272px with bottom bar */
+    --n-wide: 2.5;
+    --n-compact: 3.5;
+    --n-micro: 5.5;
+    --n-qw: 4.5;
+  }
+  .tablet .tile-row { gap: var(--row-gap); }
+  .tablet .tile-poster    { width: calc((100% - (var(--n-poster)  - 0.5) * var(--row-gap)) / var(--n-poster)); }
+  .tablet .tile-landscape { width: calc((100% - (var(--n-wide)    - 0.5) * var(--row-gap)) / var(--n-wide)); }
+  .tablet .tile-compact   { width: calc((100% - (var(--n-compact) - 0.5) * var(--row-gap)) / var(--n-compact)); }
+  /* 9:16 microseries clips are inline-styled flex:0 0 100px in the markup */
+  .tablet .tile-row > div[style*="flex:0 0 100px"] div[style*="font-size:10px"] { font-size: 12px !important; }
+  .tablet .tile-row > div[style*="flex:0 0 100px"] div[style*="font-size:8px"] { font-size: 10px !important; }
+  .tablet .tile-row > div[style*="flex:0 0 100px"] { flex-basis: calc((100% - (var(--n-micro) - 0.5) * var(--row-gap)) / var(--n-micro)) !important; }
+  .tablet .quick-watch-row { gap: var(--row-gap); }
+  .tablet .qw-tile, .tablet .qw-thumb { width: calc((100% - (var(--n-qw) - 0.5) * var(--row-gap)) / var(--n-qw)); }
+  .tablet .qw-thumb { width: 100%; }
+  .tablet .time-result-card { width: 176px; }
+  .tablet .resume-strip { gap: 12px; }
+  .tablet .resume-pill { padding: 8px 14px 8px 8px; gap: 12px; }
+  .tablet .resume-pill-thumb { width: 56px; height: 56px; border-radius: 8px; }
+  .tablet .tile-thumb { border-radius: 12px; }
+
+  /* Type scale for arm's-length viewing (tablet on lap/table sits farther away than a phone in hand) */
+  .tablet .section-label { font-size: 20px; padding-bottom: 12px; }
+  .tablet .tile-title { font-size: 15px; margin-top: 8px; }
+  .tablet .tile-meta, .tablet .tile-sub, .tablet .tile-info { font-size: 12px; }
+  .tablet .tile-source-badge { font-size: 10px; padding: 3px 7px; }
+  .tablet .resume-pill-title { font-size: 13px; }
+  .tablet .resume-pill-time { font-size: 12px; }
+  .tablet .quick-watch-title { font-size: 17px; }
+  .tablet .quick-watch-sub { font-size: 13px; }
+  .tablet .qw-time-badge { font-size: 12px; }
+  .tablet .dense-tile-title { font-size: 12px; }
+  .tablet .dense-tile-info { font-size: 11px; }
+  .tablet .tab-bar .tab { font-size: 13px; padding: 8px 16px; }
+  .tablet .location-banner-title { font-size: 20px; }
+  .tablet .location-banner-sub { font-size: 13px; }
+
+  /* ── Top 10 trays, tablet treatment ──
+     Full ten ranks (it's a Top 10), numeral scaled to the tile via container
+     units, bigger poster, wrapped title + rank-movement chip. 5.5-up in
+     landscape / 3.5-up in portrait so the row reads as scrollable. */
+  .tablet { --n-top10: 5.5; }
+  .orient-portrait .tablet { --n-top10: 3.5; }
+  .tablet .top10-row { gap: var(--row-gap); padding: 0 28px 26px; }
+  .tablet .top10-tile {
+    width: calc((100% - (var(--n-top10) - 0.5) * var(--row-gap)) / var(--n-top10));
+    container-type: inline-size;
+  }
+  /* 30% numeral gutter expressed as child margin (resolves against the tile, unlike padding %) */
+  .tablet .top10-thumb { width: 70%; margin-left: 30%; margin-bottom: 8px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+  .tablet .top10-number {
+    left: -1%; bottom: 58px;
+    font-size: 84cqw; letter-spacing: -0.06em;
+    text-shadow: 3px 3px 0 var(--bg), -1px -1px 0 var(--bg), 1px -1px 0 var(--bg), -1px 1px 0 var(--bg), 0 4px 10px rgba(0,0,0,0.55);
+  }
+  .tablet .top10-tile.two-digit .top10-number { font-size: 60cqw; letter-spacing: -0.12em; left: -5%; }
+  .tablet .top10-title { padding-left: 30%; font-size: 14px; font-weight: 700; white-space: normal; line-height: 1.25; min-height: 2.5em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .tablet .top10-meta { padding-left: 30%; display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 11px; color: var(--text-muted); }
+  .tablet .top10-chip { font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 6px; background: rgba(62,224,197,0.14); color: var(--accent-teal); letter-spacing: 0.02em; }
+  .tablet .top10-chip.down { background: rgba(255,255,255,0.07); color: var(--text-muted); }
+  .tablet .top10-chip.new { background: rgba(201,168,76,0.18); color: var(--accent-gold); }
+
+  /* ── Edge alignment: 28px gutters on tablet ── */
+  .tablet .section-label, .tablet .resume-strip, .tablet .resume-strip-label,
+  .tablet .quick-watch-header, .tablet .quick-watch-row, .tablet .quick-watch-sub,
+  .tablet .dense-section-label, .tablet .density-transition, .tablet .feed-subtabs,
+  .tablet .brand-chips, .tablet .time-tray, .tablet .search-page-header,
+  .tablet .mystuff-tabs, .tablet .mystuff-row, .tablet .myfeeds-empty { padding-left: 28px; padding-right: 28px; }
+  .tablet .location-banner, .tablet .feed-end { margin-left: 28px; margin-right: 28px; }
+  .tablet .dense-grid { padding-left: 28px; padding-right: 28px; gap: 10px; grid-template-columns: repeat(5, 1fr); }
+  .orient-portrait .tablet .dense-grid { grid-template-columns: repeat(4, 1fr); }
+
+  /* Content scrolls behind the floating mini-player, so leave room at the end */
+  .tablet .feed-panel, .tablet .search-page-body { padding-bottom: 110px; }
+
+  /* Mini-player spans the surface width */
+  .tablet .bottom-control { left: 0; right: 0; padding: 0 16px 12px; }
+  .tablet .now-playing-mini { padding: 12px 18px; }
+
+  /* ── Nav mode: sidebar vs bottom bar ── */
+  .proto-controls { position: fixed; top: 12px; left: 12px; z-index: 9999; display: flex; gap: 10px; flex-wrap: wrap; }
+  .proto-controls .orient-toggle { position: static; }
+  .tablet-bottom-nav {
+    display: none;
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 30;
+    padding: 10px 0 22px;
+    background: rgba(14,11,30,0.96);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-bottom .tablet-bottom-nav { display: block; }
+  .nav-bottom .side-nav { display: none; }
+  .tablet-bottom-nav .nav-row { display: flex; justify-content: center; gap: 64px; padding: 0; }
+  .orient-portrait .tablet-bottom-nav .nav-row { gap: 44px; }
+  .tablet-bottom-nav .nav-item { gap: 4px; padding: 4px 12px; border-radius: 12px; opacity: 0.5; transition: opacity 0.2s; }
+  .tablet-bottom-nav .nav-item:hover { opacity: 0.85; }
+  .tablet-bottom-nav .nav-item.active { opacity: 1; }
+  .tablet-bottom-nav .nav-item.active svg { fill: var(--accent-teal); }
+  .tablet-bottom-nav .nav-item.active .nav-label { color: var(--accent-teal); }
+  .tablet-bottom-nav .nav-item svg { width: 24px; height: 24px; }
+  .tablet-bottom-nav .nav-label { font-size: 10px; }
+  /* Make room for the bar: shorten the column, lift the mini-player and resume strip */
+  .nav-bottom .tablet .main-col { padding-bottom: 76px; }
+  .nav-bottom .tablet .search-page-body { padding-bottom: 190px; }
+  .nav-bottom .tablet .bottom-control { bottom: 84px; }
+  .nav-bottom .tablet .sticky-resume { bottom: 96px; }
+  .nav-bottom .tablet .home-indicator { z-index: 41; }
+
+  /* ── Long-press: centered popover card on tablet ── */
+  .tablet .lp-overlay { background: rgba(0,0,0,0.6); }
+  .tablet .lp-sheet {
+    left: 50%; top: 50%; right: auto; bottom: auto;
+    width: 380px;
+    border-radius: 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    transition: transform 0.28s cubic-bezier(0.34,1.4,0.64,1), opacity 0.2s ease;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .tablet .lp-container.active .lp-sheet { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  .tablet .lp-sheet-handle { display: none; }
+  .tablet .lp-sheet-header { padding: 20px 22px 14px; gap: 16px; }
+  .tablet .lp-sheet-thumb { width: 64px; height: 64px; border-radius: 12px; }
+  .tablet .lp-sheet-title { font-size: 17px; }
+  .tablet .lp-sheet-actions { padding: 4px 10px 14px; }
+  .tablet .lp-menu-item { padding: 15px 18px; font-size: 15px; }
+  .tablet .lp-hint { font-size: 12px; padding: 6px 14px; }
+
+  /* ── Tour card sits left of the scaled frame ── */
+  .wt-card { right: calc(50% - 162px + (var(--fw) * var(--scale)) / 2); }
+  @media (max-width: 900px) { .wt-card { right: auto; } }
+
+  /* Nav-mode toggle docked bottom-left, de-emphasised */
+  .nav-toggle-dock { position: fixed; left: 14px; bottom: 14px; z-index: 9998; opacity: 0.45; transition: opacity 0.2s; }
+  .nav-toggle-dock:hover { opacity: 1; }
+  .nav-toggle-dock .orient-toggle { position: static; padding: 2px; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); box-shadow: none; }
+  .nav-toggle-dock .orient-btn { padding: 4px 9px; font-size: 11px; }
+  .nav-toggle-dock .orient-btn svg { width: 12px; height: 12px; }
+  .nav-toggle-dock .orient-btn.active { background: rgba(255,255,255,0.18); color: #fff; }
+  @media (max-width: 900px) { .nav-toggle-dock { bottom: 56px; } }
+
+  /* ── Orientation toggle ── */
+  .orient-toggle {
+    position: fixed; top: 12px; left: 12px; z-index: 9999;
+    display: inline-flex; gap: 2px; padding: 3px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    font-family: 'Inter', sans-serif;
+  }
+  .orient-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 16px; border: none;
+    background: transparent; color: rgba(255,255,255,0.6);
+    font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+  .orient-btn svg { width: 14px; height: 14px; }
+  .orient-btn:hover { color: #fff; }
+  .orient-btn.active { background: rgba(255,255,255,0.92); color: #0e0b1e; }
+  .orient-label-mini { position: fixed; top: 44px; left: 16px; font-size: 10px; color: rgba(255,255,255,0.3); font-family: 'Inter', sans-serif; letter-spacing: 0.3px; z-index: 9998; }
 </style>
 
-<a class="wt-report-btn" href="https://claude.ai/code/artifact/f2ca6211-d4b0-4591-b340-7c616bff85d5" target="_blank"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Full Report</a>
+<div class="proto-controls">
+<div class="orient-toggle" id="orientToggle">
+  <button class="orient-btn active" data-orient="landscape" title="Landscape"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="19.2" cy="12" r="0.9" fill="currentColor"/></svg>Landscape</button>
+  <button class="orient-btn" data-orient="portrait" title="Portrait"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="19.2" r="0.9" fill="currentColor"/></svg>Portrait</button>
+</div>
+</div><!-- /proto-controls -->
+<div class="nav-toggle-dock" id="navToggleDock">
+<div class="orient-toggle nav-toggle" id="navToggle">
+  <button class="orient-btn active" data-nav="side" title="Sidebar navigation"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="4" x2="8" y2="20" stroke="currentColor" stroke-width="1.8"/></svg>Sidebar</button>
+  <button class="orient-btn" data-nav="bottom" title="Bottom bar navigation"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="2" y1="16" x2="22" y2="16" stroke="currentColor" stroke-width="1.8"/></svg>Bottom bar</button>
+</div>
+</div>
+<a class="wt-report-btn" href="https://claude.ai/artifact/EyjVX3W3rbjZBnhSBdrESK" target="_blank"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Full Report</a>
 <button class="wt-btn" id="wtBtn">▶ Guided Tour</button>
 <div class="wt-overlay" id="wtOverlay"></div>
 <div class="wt-spotlight" id="wtSpotlight" style="display:none;"></div>
@@ -2702,7 +2993,37 @@
   </div>
 </div>
 <div class="proto-attribution">Concept exploration by Shravya Thota · Oct 2026</div>
-<div class="device-frame" id="device">
+<div class="stage" id="stage">
+<div class="device-frame tablet" id="device">
+  <aside class="side-nav" id="sideNav">
+    <div class="side-brand"><svg viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg></div>
+    <div class="nav-row">
+      <div class="nav-item active" id="homeNav">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span class="nav-label">Home</span>
+      </div>
+      <div class="nav-item" id="vertsNav">
+        <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
+        <span class="nav-label">Verts</span>
+      </div>
+      <div class="nav-item" id="moviesNav">
+        <svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
+        <span class="nav-label">Movies</span>
+      </div>
+      <div class="nav-item" id="seriesNav">
+        <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM9 8l7 4-7 4V8z"/></svg>
+        <span class="nav-label">Series</span>
+      </div>
+      <div class="nav-item" id="myStuffNav">
+        <svg viewBox="0 0 24 24"><path d="M14 10H2v2h12v-2zm0-4H2v2h12V6zm4 8v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 16h8v-2H2v2z"/></svg>
+        <span class="nav-label">My Stuff</span>
+      </div>
+      <!-- Search moved to top bar -->
+    </div>
+    <div class="side-nav-spacer"></div>
+    <div class="nav-item side-settings"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg><span class="nav-label">Settings</span></div>
+  </aside>
+  <div class="main-col" id="mainCol">
   <!-- Status bar -->
   <div class="status-bar">
     <span>9:41</span>
@@ -4264,33 +4585,13 @@
         </div>
       </div>
     </div>
-    <div class="nav-row">
-      <div class="nav-item active" id="homeNav">
-        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <span class="nav-label">Home</span>
-      </div>
-      <div class="nav-item" id="vertsNav">
-        <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
-        <span class="nav-label">Verts</span>
-      </div>
-      <div class="nav-item" id="moviesNav">
-        <svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
-        <span class="nav-label">Movies</span>
-      </div>
-      <div class="nav-item" id="seriesNav">
-        <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM9 8l7 4-7 4V8z"/></svg>
-        <span class="nav-label">Series</span>
-      </div>
-      <div class="nav-item" id="myStuffNav">
-        <svg viewBox="0 0 24 24"><path d="M14 10H2v2h12v-2zm0-4H2v2h12V6zm4 8v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 16h8v-2H2v2z"/></svg>
-        <span class="nav-label">My Stuff</span>
-      </div>
-      <!-- Search moved to top bar -->
-    </div>
   </div>
 
   <div class="home-indicator"></div>
-</div>
+  <nav class="tablet-bottom-nav" id="tabletBottomNav"></nav>
+  </div><!-- /main-col -->
+</div><!-- /device -->
+</div><!-- /stage -->
 
 <script>
 (function() {
@@ -4850,9 +5151,16 @@
   }
 
   function showContextMenu(anchor) {
+    // position:fixed inside the scaled device frame resolves against the frame, so map coords into it
     const rect = anchor.getBoundingClientRect();
-    contextMenu.style.left = Math.min(rect.left, window.innerWidth - 180) + 'px';
-    contextMenu.style.top = (rect.bottom + 6) + 'px';
+    const dev = document.getElementById('device').getBoundingClientRect();
+    const cs = getComputedStyle(document.documentElement);
+    const sc = parseFloat(cs.getPropertyValue('--scale')) || 1;
+    const fw = parseFloat(cs.getPropertyValue('--fw')) || (dev.width / sc);
+    const left = Math.min((rect.left - dev.left) / sc, fw - 190);
+    const top = (rect.bottom - dev.top) / sc + 6;
+    contextMenu.style.left = left + 'px';
+    contextMenu.style.top = top + 'px';
     contextMenu.classList.add('open');
   }
 
@@ -5353,7 +5661,7 @@
       item.addEventListener('click', (e) => {
         e.stopPropagation();
         const action = item.dataset.action;
-        const title = lpActiveTile?.querySelector('.tile-title')?.textContent || 'title';
+        const title = lpActiveTile?.querySelector('.tile-title, .top10-title')?.textContent || 'title';
         closeLongPress();
         showLPToast(action, title);
       });
@@ -5367,7 +5675,7 @@
     lpContainer.classList.add('active');
 
     // Populate sheet header with tile info
-    const tileTitle = tile.querySelector('.tile-title')?.textContent || '';
+    const tileTitle = tile.querySelector('.tile-title, .top10-title')?.textContent || '';
     const tileImg = tile.querySelector('.tile-thumb img, .tile-thumb')?.style?.backgroundImage?.replace(/url\(["']?|["']?\)/g, '') || '';
     const sheetTitle = lpSheet.querySelector('.lp-sheet-title');
     const sheetThumb = lpSheet.querySelector('.lp-sheet-thumb img');
@@ -5439,7 +5747,7 @@
   }
 
   function initTileLongPress() {
-    document.querySelectorAll('.tile-row .tile').forEach(tile => {
+    document.querySelectorAll('.tile-row .tile, .top10-row .top10-tile').forEach(tile => {
       if (tile._lpInit) return;
       tile._lpInit = true;
 
@@ -6032,7 +6340,7 @@
   const WT_STEPS = [
     {
       id: 'intro', title: 'About This Prototype',
-      desc: 'This prototype represents my personal exploration of a holistic mobile redesign to address key user challenges, drawing from our recent workshop ideation sessions. <strong>It reflects my individual take rather than a final team consensus — please treat it as a concept draft.</strong> Tap Next to walk through each idea.',
+      desc: 'This prototype represents my personal exploration of a holistic mobile redesign to address key user challenges, drawing from our recent workshop ideation sessions. <strong>It reflects my individual take rather than a final team consensus — please treat it as a concept draft.</strong> This is the tablet adaptation of the mobile concept — use the Landscape / Portrait toggle (top left) at any time. Tap Next to walk through each idea.',
       badges: [],
       setup: () => { switchTab(0); setTimeout(() => { document.getElementById('feed0').scrollTo({top:0}); }, 100); },
       target: () => document.getElementById('device')
@@ -6534,6 +6842,163 @@
     if (e.key === 'ArrowLeft') { e.preventDefault(); wtPrev.click(); }
     if (e.key === 'Escape') endWalkthrough();
   });
+
+  // ===== TABLET: orientation toggle + fit-to-viewport scaling =====
+  const ORIENT = { landscape: [1180, 820], portrait: [820, 1180] };
+  let currentOrient = 'landscape';
+  const rootStyle = document.documentElement.style;
+
+  function fitStage() {
+    const [fw, fh] = ORIENT[currentOrient];
+    const wide = window.innerWidth > 900;
+    const tourOn = document.body.classList.contains('tour-on');
+    // Reserve room for the tour card on the left only while the tour is open
+    const reserveW = wide ? (tourOn ? 410 : 48) : 24;
+    const reserveH = wide ? 72 : 130;
+    const s = Math.min(1, (window.innerWidth - reserveW) / fw, (window.innerHeight - reserveH) / fh);
+    rootStyle.setProperty('--fw', fw + 'px');
+    rootStyle.setProperty('--fh', fh + 'px');
+    rootStyle.setProperty('--scale', Math.max(0.3, s).toFixed(4));
+    if (wtActive) requestAnimationFrame(positionSpotlight);
+  }
+
+  function setOrientation(o) {
+    if (!ORIENT[o]) o = 'landscape';
+    currentOrient = o;
+    document.body.classList.toggle('orient-portrait', o === 'portrait');
+    document.body.classList.toggle('orient-landscape', o === 'landscape');
+    document.querySelectorAll('.orient-btn').forEach(b => b.classList.toggle('active', b.dataset.orient === o));
+    // Close transient UI that was positioned for the other orientation
+    if (typeof closeLongPress === 'function') closeLongPress();
+    fitStage();
+    try { localStorage.setItem('tablet_orient', o); } catch(e) {}
+  }
+
+  document.querySelectorAll('.orient-btn').forEach(b => b.addEventListener('click', () => setOrientation(b.dataset.orient)));
+  window.addEventListener('resize', fitStage);
+
+  // Mirror tour state onto <body> so layout can make room for the card
+  const wtCardEl = document.getElementById('wtCard');
+  if (wtCardEl) {
+    new MutationObserver(() => {
+      document.body.classList.toggle('tour-on', wtCardEl.classList.contains('wt-on'));
+      fitStage();
+    }).observe(wtCardEl, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  let savedOrient = 'landscape';
+  try { savedOrient = localStorage.getItem('tablet_orient') || 'landscape'; } catch(e) {}
+  setOrientation(savedOrient);
+
+  // ===== TABLET: nav mode (sidebar vs bottom bar) =====
+  let currentNavMode = 'side';
+  function setNavMode(mode) {
+    if (mode !== 'bottom') mode = 'side';
+    currentNavMode = mode;
+    const navRow = document.querySelector('.nav-row');
+    const sideNavEl = document.getElementById('sideNav');
+    const bottomNavEl = document.getElementById('tabletBottomNav');
+    if (navRow && sideNavEl && bottomNavEl) {
+      if (mode === 'bottom') {
+        bottomNavEl.appendChild(navRow);
+      } else {
+        const spacer = sideNavEl.querySelector('.side-nav-spacer');
+        sideNavEl.insertBefore(navRow, spacer);
+      }
+    }
+    document.body.classList.toggle('nav-bottom', mode === 'bottom');
+    document.querySelectorAll('.nav-toggle .orient-btn').forEach(b => b.classList.toggle('active', b.dataset.nav === mode));
+    if (typeof closeLongPress === 'function') closeLongPress();
+    if (wtActive) requestAnimationFrame(positionSpotlight);
+    try { localStorage.setItem('tablet_navmode', mode); } catch(e) {}
+  }
+  document.querySelectorAll('.nav-toggle .orient-btn').forEach(b => b.addEventListener('click', () => setNavMode(b.dataset.nav)));
+  let savedNav = 'side';
+  try { savedNav = localStorage.getItem('tablet_navmode') || 'side'; } catch(e) {}
+  setNavMode(savedNav);
+
+  // ===== TABLET: fill horizontal trays to the full surface width =====
+  const FILL_TITLES = ['Percy Jackson and the Olympians','Only Murders in the Building','The Bear','Shōgun','Bluey','Ahsoka','Elemental','Inside Out 2','Moana 2','Andor','X-Men \'97','The Acolyte','Agatha All Along','Deadpool & Wolverine','Mufasa: The Lion King','Alien: Earth','Daredevil: Born Again','Win or Lose','Dream Productions','The Simpsons','Abbott Elementary','Paradise','Skeleton Crew','Iron Heart','Hamilton','Soul','Turning Red','Luca','Encanto','Frozen II','Loki','WandaVision','Hawkeye','Ms. Marvel','Secret Invasion'];
+  const FILL_CLIPS = ['Behind the Scenes: Ep. 5','Director Breakdown','Fan Theory Roundup','Costume Design Secrets','Cast Table Read','Deleted Scene: The Rooftop','Easter Eggs You Missed','Soundtrack Spotlight','On-Set Blooper Reel','Recap in 90 Seconds','Stunt Rehearsal','Writers Room Q&A'];
+  let fillSeed = 0;
+  const FILL_ROW_SELECTOR = '.tablet .tile-row, .tablet .resume-strip, .tablet .quick-watch-row';
+
+  function fillRow(row) {
+    if (!row._fillOrig) row._fillOrig = Array.from(row.children).filter(c => c.nodeType === 1);
+    const orig = row._fillOrig;
+    if (!orig.length) return;
+    // drop previous clones so we re-fill for the current width
+    row.querySelectorAll(':scope > [data-fill-clone]').forEach(c => c.remove());
+    const avail = row.clientWidth;
+    if (avail < 50) return; // hidden (display:none page) — ResizeObserver will call again
+    const firstW = orig[0].getBoundingClientRect().width || 150;
+    const sc = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale')) || 1;
+    const tileW = firstW / sc;
+    const isClipRow = !!orig[0].querySelector('[style*="aspect-ratio:9/16"]');
+    let guard = 0;
+    while (row.scrollWidth < avail + tileW && guard < 40) {
+      const src = orig[guard % orig.length];
+      const clone = src.cloneNode(true);
+      clone.setAttribute('data-fill-clone', '1');
+      // vary the label
+      const titleEl = clone.querySelector('.tile-title, .resume-pill-title, .quick-watch-title')
+        || (isClipRow ? clone.querySelector('div[style*="font-weight:700"][style*="line-height"]') : null);
+      if (titleEl) {
+        const pool = isClipRow ? FILL_CLIPS : FILL_TITLES;
+        titleEl.textContent = pool[(fillSeed++) % pool.length];
+      }
+      // vary the artwork colour
+      const artEl = clone.querySelector('[class*="art-"]');
+      if (artEl) {
+        const m = artEl.className.match(/\bart-(\d+)\b/);
+        if (m) artEl.className = artEl.className.replace(/\bart-\d+\b/, 'art-' + (((+m[1] + 3 + guard) % 10) + 1));
+      }
+      row.appendChild(clone);
+      guard++;
+    }
+    if (guard && typeof initTileLongPress === 'function') initTileLongPress();
+  }
+
+  function fillAllRows() { document.querySelectorAll(FILL_ROW_SELECTOR).forEach(fillRow); }
+
+  const fillObserver = new ResizeObserver(entries => {
+    entries.forEach(e => fillRow(e.target));
+  });
+  document.querySelectorAll(FILL_ROW_SELECTOR).forEach(r => fillObserver.observe(r));
+  // Initial pass after first layout; orientation / nav-mode changes are caught by the observer
+  requestAnimationFrame(() => requestAnimationFrame(fillAllRows));
+
+  // ===== TABLET: Top 10 trays — full ten ranks, rank-movement chips =====
+  const TOP10_MOVIES = ['Inside Out 2','Deadpool & Wolverine','Moana 2','Alien: Romulus','Kingdom','Mufasa: The Lion King','Elemental','Encanto','Soul','Luca'];
+  const TOP10_SERIES = ['Percy Jackson','The Bear','Ahsoka','Loki S2','Only Murders','Shōgun','Andor','Agatha All Along','Bluey','The Simpsons'];
+  const TOP10_MOVES  = ['—','▲2','▼1','NEW','▲1','—','▲3','NEW','▼2','▲1']; // illustrative
+  function enhanceTop10() {
+    document.querySelectorAll('.tablet .top10-row').forEach(row => {
+      if (row._t10) return;
+      row._t10 = true;
+      const label = (row.previousElementSibling && row.previousElementSibling.textContent) || '';
+      const isSeries = /series/i.test(label);
+      const pool = isSeries ? TOP10_SERIES : TOP10_MOVIES;
+      const seeds = Array.from(row.children);
+      while (row.children.length < 10) row.appendChild(seeds[row.children.length % seeds.length].cloneNode(true));
+      Array.from(row.children).forEach((tile, i) => {
+        const n = tile.querySelector('.top10-number'); if (n) n.textContent = String(i + 1);
+        tile.classList.toggle('two-digit', i + 1 >= 10);
+        const t = tile.querySelector('.top10-title'); if (t && pool[i]) t.textContent = pool[i];
+        if (!tile.querySelector('.top10-meta')) {
+          const mv = TOP10_MOVES[i];
+          const cls = mv === 'NEW' ? ' new' : (mv.startsWith('▼') ? ' down' : '');
+          const m = document.createElement('div');
+          m.className = 'top10-meta';
+          m.innerHTML = '<span class="top10-chip' + cls + '">' + mv + '</span><span>' + (isSeries ? 'Series' : 'Movie') + '</span>';
+          tile.appendChild(m);
+        }
+        tile._lpInit = false;
+      });
+    });
+    if (typeof initTileLongPress === 'function') initTileLongPress();
+  }
+  enhanceTop10();
 
 })();
 </script>
